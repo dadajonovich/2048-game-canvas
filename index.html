@@ -6,7 +6,14 @@
     <title>2048</title>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
+    <div class="counter">
+      <p class="counter__title">Счет: <span id="score">666</span></p>
+    </div>
+    <div id="app">
+      <main class="wrapper">
+        <canvas id="board" class="board"> </canvas>
+      </main>
+    </div>
+    <script type="module" src="main.js"></script>
   </body>
 </html>
