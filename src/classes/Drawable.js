@@ -1,12 +1,13 @@
 class Drawable {
   static ctx;
+
   static board;
 
   constructor() {
     if (Drawable.ctx) return;
     Drawable.board = document.getElementById('board');
     if (!Drawable.board) {
-      throw new Error('Error board');
+      throw new Error('Board missing!');
     }
 
     Drawable.ctx = Drawable.board.getContext('2d');

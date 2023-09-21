@@ -2,6 +2,7 @@ import Drawable from './Drawable';
 
 class Cell extends Drawable {
   position;
+
   value = '';
 
   constructor(position, value) {
@@ -18,7 +19,7 @@ class Cell extends Drawable {
       this.position.x * size,
       this.position.y * size,
       size - 10,
-      size - 10
+      size - 10,
     );
     Drawable.ctx.closePath();
   }

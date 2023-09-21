@@ -1,5 +1,6 @@
 class Position {
   x;
+
   y;
 
   constructor(x, y) {

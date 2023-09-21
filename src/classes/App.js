@@ -3,11 +3,12 @@ import Position from './Position';
 
 class App {
   rows = [];
+
   score = document.getElementById('score');
 
   constructor() {
     if (!this.score) {
-      throw new Error('Error score');
+      throw new Error('Score missing!');
     }
 
     for (let i = 0; i < 4; i++) {
