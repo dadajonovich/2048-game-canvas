@@ -25,6 +25,3 @@ class Cell extends Drawable {
 }
 
 export default Cell;
-
-const pizda = 'suka';
-pizda = 'blyat';
