@@ -1,4 +1,4 @@
-class Position {
+class Vector2 {
   x;
 
   y;
@@ -9,4 +9,4 @@ class Position {
   }
 }
 
-export default Position;
+export default Vector2;

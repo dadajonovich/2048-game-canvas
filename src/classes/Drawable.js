@@ -1,7 +1,13 @@
 class Drawable {
+  /** @type {CanvasRenderingContext2D} */
   static ctx;
 
   static board;
+
+  static setCanvasSize(size) {
+    Drawable.board.width = size;
+    Drawable.board.height = size;
+  }
 
   constructor() {
     if (Drawable.ctx) return;
@@ -11,17 +17,10 @@ class Drawable {
     }
 
     Drawable.ctx = Drawable.board.getContext('2d');
-    window.addEventListener('resize', this.resizeCanvas.bind(this));
-    this.resizeCanvas();
   }
 
   draw() {
     throw new Error('The draw method is not implemented');
-  }
-
-  resizeCanvas() {
-    Drawable.ctx.canvas.width = document.documentElement.clientWidth;
-    Drawable.ctx.canvas.height = Drawable.ctx.canvas.width;
   }
 }
 
