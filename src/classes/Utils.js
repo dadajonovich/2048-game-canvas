@@ -26,6 +26,14 @@ class Utils {
 
     return randomArray;
   }
+
+  static rotate90Counterclockwise(matrix) {
+    return matrix[0].map((_, i) => matrix.map((subArray) => subArray[i]));
+  }
+
+  static flipVertically(matrix) {
+    return matrix.map((subarray) => subarray.reverse());
+  }
 }
 
 export default Utils;

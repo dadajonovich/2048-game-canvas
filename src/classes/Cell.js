@@ -41,7 +41,9 @@ class Cell extends Drawable {
   }
 
   draw() {
-    Drawable.ctx.beginPath();
+    if (this.value === 0) return;
+
+    // Drawable.ctx.beginPath();
     Drawable.ctx.fillStyle = Cell.colors[this.value];
     Drawable.ctx.fillRect(
       this.position.x,
@@ -55,7 +57,15 @@ class Cell extends Drawable {
       this.size,
       this.size,
     );
-    Drawable.ctx.closePath();
+    Drawable.ctx.fillStyle = 'black';
+    Drawable.ctx.textAlign = 'center';
+    Drawable.ctx.textBaseline = 'middle';
+    Drawable.ctx.fillText(
+      2 ** this.value,
+      this.position.x + this.size / 2,
+      this.position.y + this.size / 2,
+    );
+    // Drawable.ctx.closePath();
   }
 }
 

@@ -34,8 +34,9 @@ class App extends Drawable {
     }
 
     window.addEventListener('resize', this.resizeCanvasHandler.bind(this));
-    document.addEventListener('keydown', (e) => console.log(e));
+    document.addEventListener('keydown', (e) => this.swap(e));
     this.resizeCanvasHandler();
+    // console.log(this.rows);
   }
 
   draw() {
@@ -49,7 +50,6 @@ class App extends Drawable {
   resizeCanvasHandler() {
     Drawable.setCanvasSize(Math.min(document.documentElement.clientWidth, 500));
     this.gap = Drawable.board.width * 0.05;
-    // const sizeCellGrid = Grid(this.gap);
 
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
@@ -62,6 +62,10 @@ class App extends Drawable {
     }
 
     this.draw();
+  }
+
+  swap(event) {
+    console.log(event);
   }
 }
 
