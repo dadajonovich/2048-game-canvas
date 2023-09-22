@@ -1,11 +1,13 @@
 import Cell from './Cell';
 import Drawable from './Drawable';
+// import Grid from './Grid';
+import Utils from './Utils';
 import Vector2 from './Vector2';
 
 class App extends Drawable {
   rows = [];
 
-  gap = Drawable.board.width / 10;
+  gap = 0;
 
   score = document.getElementById('score');
 
@@ -15,15 +17,7 @@ class App extends Drawable {
       throw new Error('Score missing!');
     }
 
-    const startValues = [
-      // Math.floor(Math.random() * 16),
-      // Math.floor(Math.random() * 16),
-    ];
-
-    const addRandomNums = (array) => {
-      const randomNum = null;
-      Math.floor(Math.random() * 16);
-    };
+    const startValues = Utils.createArrayWithRandomInt();
 
     for (let i = 0; i < 4; i++) {
       const cells = [];
@@ -54,14 +48,16 @@ class App extends Drawable {
 
   resizeCanvasHandler() {
     Drawable.setCanvasSize(Math.min(document.documentElement.clientWidth, 500));
+    this.gap = Drawable.board.width * 0.05;
+    // const sizeCellGrid = Grid(this.gap);
 
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        const sizeCell = (Drawable.board.width - this.gap) / 4;
+        const sizeCellGrid = (Drawable.board.width - this.gap) / 4;
         this.rows[j][i].setPosition(
-          new Vector2(j * sizeCell + this.gap, i * sizeCell + this.gap),
+          new Vector2(j * sizeCellGrid + this.gap, i * sizeCellGrid + this.gap),
         );
-        this.rows[j][i].setSize(sizeCell - this.gap);
+        this.rows[j][i].setSize(sizeCellGrid - this.gap);
       }
     }
 

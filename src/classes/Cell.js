@@ -36,6 +36,10 @@ class Cell extends Drawable {
     this.size = size;
   }
 
+  setValue(value) {
+    this.value = value;
+  }
+
   draw() {
     Drawable.ctx.beginPath();
     Drawable.ctx.fillStyle = Cell.colors[this.value];
