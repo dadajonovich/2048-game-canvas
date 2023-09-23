@@ -4,6 +4,14 @@ import Drawable from './Drawable';
 import Utils from './Utils';
 import Vector2 from './Vector2';
 
+// enum
+const Direction = {
+  up: Symbol('id'),
+  right: Symbol('id'),
+  down: Symbol('id'),
+  left: Symbol('id'),
+};
+
 class App extends Drawable {
   rows = [];
 
@@ -34,7 +42,7 @@ class App extends Drawable {
     }
 
     window.addEventListener('resize', this.resizeCanvasHandler.bind(this));
-    document.addEventListener('keydown', (e) => this.swap(e));
+    document.addEventListener('keydown', this.keyDownHandler.bind(this));
     this.resizeCanvasHandler();
     // console.log(this.rows);
   }
@@ -64,8 +72,47 @@ class App extends Drawable {
     this.draw();
   }
 
-  swap(event) {
-    console.log(event);
+  getGroups(direction) {
+    switch (direction) {
+      case Direction.up:
+        return Utils.rotate90Counterсlockwise(this.rows);
+      case Direction.left:
+        return this.rows;
+      case Direction.down:
+        return Utils.flipVertically(Utils.rotate90Counterсlockwise(this.rows));
+      default:
+        return Utils.flipVertically(this.rows);
+    }
+  }
+
+  move(direction) {
+    const groups = this.getGroups(direction);
+    for (let i = 0; i < groups.length; i++) {
+      for (let j = 1; i < groups[i].length; i++) {
+        const current = groups[i][j];
+        if (current.value === 0) continue;
+        for (let k = j - 1; k >= 0; k--) {}
+      }
+    }
+  }
+
+  keyDownHandler(event) {
+    switch (event.key) {
+      case 'ArrowUp':
+        // console.log('Click ArrowUp!');
+        return this.move(Direction.up);
+      case 'ArrowLeft':
+        // console.log('Click ArrowLeft!');
+        return this.move(Direction.left);
+      case 'ArrowDown':
+        // console.log('Click ArrowDown!');
+        return this.move(Direction.down);
+      case 'ArrowRight':
+        // console.log('Click ArrowRight');
+        return this.move(Direction.right);
+      default:
+        return undefined;
+    }
   }
 }
 
