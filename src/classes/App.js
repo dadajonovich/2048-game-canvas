@@ -86,20 +86,13 @@ class App extends Drawable {
     }
   }
 
-  move(direction) {
-    const groups = this.getGroups(direction);
-  }
-
   keyDownHandler(event) {
     switch (event.key) {
       case 'ArrowUp':
         // console.log('Click ArrowUp!');
         return this.move(Direction.up);
       case 'ArrowLeft':
-        // console.log('Click ArrowLeft!');
-        this.moveLeft();
-        // return this.move(Direction.left);
-        break;
+        return this.move(Direction.left);
       case 'ArrowDown':
         // console.log('Click ArrowDown!');
         return this.move(Direction.down);
@@ -111,21 +104,23 @@ class App extends Drawable {
     }
   }
 
-  moveLeft() {
+  move(direction) {
+    const groups = this.getGroups(direction);
+    console.log(groups);
     for (let i = 0; i < 4; i++) {
       for (let j = 1; j < 4; j++) {
-        if (this.rows[i][j].value !== 0) {
+        if (groups[i][j].value !== 0) {
           let curent = j;
           while (curent - 1 >= 0) {
-            if (this.rows[i][curent - 1].value === 0) {
-              this.rows[i][curent - 1].value = this.rows[i][curent].value;
-              this.rows[i][curent].value = 0;
+            if (groups[i][curent - 1].value === 0) {
+              groups[i][curent - 1].value = groups[i][curent].value;
+              groups[i][curent].value = 0;
             } else if (
-              this.rows[i][curent].value === this.rows[i][curent - 1].value
+              groups[i][curent].value === groups[i][curent - 1].value
             ) {
-              this.rows[i][curent - 1].value += 1;
-              // this.score.innerText += this.rows[i][curent - 1].value;
-              this.rows[i][curent].value = 0;
+              groups[i][curent - 1].value += 1;
+              // this.score.innerText += groups[i][curent - 1].value;
+              groups[i][curent].value = 0;
               break;
             }
             curent--;
