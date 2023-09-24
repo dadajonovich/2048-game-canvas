@@ -35,7 +35,7 @@ class App extends Drawable {
         if (startValues.includes(currentIndex)) {
           cells.push(new Cell(1));
         } else {
-          cells.push(new Cell(0));
+          cells.push(new Cell(1));
         }
       }
       this.rows.push(cells);
@@ -61,11 +61,12 @@ class App extends Drawable {
 
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
+        const cell = this.rows[i][j];
         const sizeCellGrid = (Drawable.board.width - this.gap) / 4;
-        this.rows[j][i].setPosition(
+        cell.setPosition(
           new Vector2(j * sizeCellGrid + this.gap, i * sizeCellGrid + this.gap),
         );
-        this.rows[j][i].setSize(sizeCellGrid - this.gap);
+        cell.setSize(sizeCellGrid - this.gap);
       }
     }
 
@@ -87,13 +88,6 @@ class App extends Drawable {
 
   move(direction) {
     const groups = this.getGroups(direction);
-    for (let i = 0; i < groups.length; i++) {
-      for (let j = 1; i < groups[i].length; i++) {
-        const current = groups[i][j];
-        if (current.value === 0) continue;
-        for (let k = j - 1; k >= 0; k--) {}
-      }
-    }
   }
 
   keyDownHandler(event) {
@@ -103,7 +97,9 @@ class App extends Drawable {
         return this.move(Direction.up);
       case 'ArrowLeft':
         // console.log('Click ArrowLeft!');
-        return this.move(Direction.left);
+        this.moveLeft();
+        // return this.move(Direction.left);
+        break;
       case 'ArrowDown':
         // console.log('Click ArrowDown!');
         return this.move(Direction.down);
@@ -113,6 +109,31 @@ class App extends Drawable {
       default:
         return undefined;
     }
+  }
+
+  moveLeft() {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 1; j < 4; j++) {
+        if (this.rows[i][j].value !== 0) {
+          let curent = j;
+          while (curent - 1 >= 0) {
+            if (this.rows[i][curent - 1].value === 0) {
+              this.rows[i][curent - 1].value = this.rows[i][curent].value;
+              this.rows[i][curent].value = 0;
+            } else if (
+              this.rows[i][curent].value === this.rows[i][curent - 1].value
+            ) {
+              this.rows[i][curent - 1].value += 1;
+              // this.score.innerText += this.rows[i][curent - 1].value;
+              this.rows[i][curent].value = 0;
+              break;
+            }
+            curent--;
+          }
+        }
+      }
+    }
+    this.resizeCanvasHandler();
   }
 }
 
