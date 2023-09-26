@@ -19,9 +19,13 @@ class Cell extends Drawable {
 
   position = new Vector2(0, 0);
 
-  prevPosition;
+  prevPosition = null;
 
-  nextPosition;
+  nextPosition = null;
+
+  isAnimating = false;
+
+  fixed = false;
 
   size = 0;
 
@@ -44,12 +48,13 @@ class Cell extends Drawable {
     this.value = value;
   }
 
-  setValueFrom(cell) {
+  mergeWith(cell) {
     if (this.value === 0) {
       this.value = cell.value;
       cell.value = 0;
-      cell.nextPosition = this.position;
-    } else if (cell.value === this.value) {
+      // cell.nextPosition = this.position;
+    }
+    if (cell.value === this.value) {
       this.value += 1;
       cell.value = 0;
       cell.nextPosition = this.position;
@@ -62,7 +67,6 @@ class Cell extends Drawable {
   draw() {
     if (this.value === 0) return;
 
-    // Drawable.ctx.beginPath();
     Drawable.ctx.fillStyle = Cell.colors[this.value];
     Drawable.ctx.fillRect(
       this.position.x,
@@ -84,8 +88,9 @@ class Cell extends Drawable {
       this.position.x + this.size / 2,
       this.position.y + this.size / 2,
     );
-    // Drawable.ctx.closePath();
   }
+
+  animated() {}
 }
 
 export default Cell;

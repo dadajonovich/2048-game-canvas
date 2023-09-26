@@ -31,6 +31,8 @@ class App extends Drawable {
       this.getAnyEmptyCell().setValue(1);
     }
 
+    window.requestAnimationFrame(this.tick.bind(this));
+
     window.addEventListener('resize', this.resizeCanvasHandler.bind(this));
     document.addEventListener('keydown', this.keyDownHandler.bind(this));
     this.resizeCanvasHandler();
@@ -38,8 +40,8 @@ class App extends Drawable {
 
   draw() {
     this.ctx.clearRect(0, 0, Drawable.board.width, Drawable.board.height);
-    Utils.forEach(this.rows, (i, j) => {
-      this.rows[i][j].draw();
+    Utils.forEach(this.rows, (cell) => {
+      cell.draw();
     });
   }
 
@@ -47,8 +49,7 @@ class App extends Drawable {
     Drawable.setCanvasSize(Math.min(document.documentElement.clientWidth, 500));
     this.gap = Drawable.board.width * 0.05;
 
-    Utils.forEach(this.rows, (i, j) => {
-      const cell = this.rows[i][j];
+    Utils.forEach(this.rows, (cell, i, j) => {
       const sizeCellGrid = (Drawable.board.width - this.gap) / 4;
       cell.setPosition(
         new Vector2(j * sizeCellGrid + this.gap, i * sizeCellGrid + this.gap),
@@ -92,26 +93,28 @@ class App extends Drawable {
 
   move(direction) {
     const groups = this.getGroups(direction);
-    Utils.forEach(groups, (i, j) => {
+    Utils.forEach(groups, (cell, i, j) => {
       if (j === 0) return;
-      if (groups[i][j].value !== 0) {
-        for (let k = j; k - 1 >= 0; k--) {
-          if (groups[i][k - 1].setValueFrom(groups[i][k])) {
-            break;
-          }
+      if (groups[i][j].value === 0) return;
+      for (let k = j; k - 1 >= 0; k--) {
+        const currentCell = groups[i][k];
+        const prevCell = groups[i][k - 1];
+        if (prevCell.mergeWith(currentCell)) {
+          break;
         }
       }
     });
 
+    this.getAnyEmptyCell().setValue(Math.random() < 0.1 ? 2 : 1);
     this.draw();
   }
 
   getAnyEmptyCell() {
     const emptyCells = [];
 
-    Utils.forEach(this.rows, (i, j) => {
-      if (this.rows[i][j].value === 0) {
-        emptyCells.push(this.rows[i][j]);
+    Utils.forEach(this.rows, (cell, i, j) => {
+      if (cell.value === 0) {
+        emptyCells.push(cell);
       }
     });
 
@@ -120,6 +123,11 @@ class App extends Drawable {
     const randomIndex = Math.floor(Math.random() * emptyCells.length);
 
     return emptyCells[randomIndex];
+  }
+
+  tick(timestamp) {
+    console.log(timestamp);
+    window.requestAnimationFrame(this.tick.bind(this));
   }
 }
 

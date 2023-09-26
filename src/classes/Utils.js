@@ -27,26 +27,26 @@ class Utils {
   //   return randomArray;
   // }
 
-  // static rotate90Counterсlockwise(matrix) {
-  //   return matrix[0].map((_, i) => matrix.map((subArray) => subArray[i]));
-  // }
-
   static rotate90Counterсlockwise(matrix) {
-    const transformedMatrix = [];
-    const lengthRows = matrix.length;
-    const lengthCols = matrix[0].length;
-
-    for (let i = 0; i < lengthCols; i++) {
-      const group = [];
-      for (let j = 0; j < lengthRows; j++) {
-        const cell = matrix[j][i];
-        group.push(cell);
-      }
-      transformedMatrix.push(group);
-    }
-
-    return transformedMatrix;
+    return matrix[0].map((_, i) => matrix.map((subArray) => subArray[i]));
   }
+
+  // static rotate90Counterсlockwise(matrix) {
+  //   const transformedMatrix = [];
+  //   const lengthRows = matrix.length;
+  //   const lengthCols = matrix[0].length;
+
+  //   for (let i = 0; i < lengthCols; i++) {
+  //     const group = [];
+  //     for (let j = 0; j < lengthRows; j++) {
+  //       const cell = matrix[j][i];
+  //       group.push(cell);
+  //     }
+  //     transformedMatrix.push(group);
+  //   }
+
+  //   return transformedMatrix;
+  // }
 
   static flipVertically(matrix) {
     return matrix.map((subarray) => subarray.toReversed());
@@ -55,7 +55,8 @@ class Utils {
   static forEach(matrix, callback) {
     for (let i = 0; i < matrix.length; i++) {
       for (let j = 0; j < matrix[i].length; j++) {
-        callback(i, j);
+        const currentCell = matrix[i][j];
+        callback(currentCell, i, j);
       }
     }
   }
