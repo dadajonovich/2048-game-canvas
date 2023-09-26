@@ -39,7 +39,8 @@ class Utils {
     for (let i = 0; i < lengthCols; i++) {
       const group = [];
       for (let j = 0; j < lengthRows; j++) {
-        group.push(matrix[j][i]);
+        const cell = matrix[j][i];
+        group.push(cell);
       }
       transformedMatrix.push(group);
     }
@@ -49,6 +50,28 @@ class Utils {
 
   static flipVertically(matrix) {
     return matrix.map((subarray) => subarray.toReversed());
+  }
+
+  static forEach(matrix, callback) {
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[i].length; j++) {
+        callback(i, j);
+      }
+    }
+  }
+
+  static createArray(length, createItem) {
+    return new Array(length)
+      .fill(undefined)
+      .map((_i, index) => createItem(index));
+  }
+
+  static createMatrix(size, createItem) {
+    return Utils.createArray(size, (rowIndex) =>
+      Utils.createArray(size, (columnIndex) => {
+        return createItem(rowIndex, columnIndex);
+      }),
+    );
   }
 }
 

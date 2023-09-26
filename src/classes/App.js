@@ -4,7 +4,6 @@ import Drawable from './Drawable';
 import Utils from './Utils';
 import Vector2 from './Vector2';
 
-// enum
 const Direction = {
   up: Symbol('id'),
   right: Symbol('id'),
@@ -17,6 +16,8 @@ class App extends Drawable {
 
   gap = 0;
 
+  gridSize = 4;
+
   score = document.getElementById('score');
 
   constructor() {
@@ -26,12 +27,12 @@ class App extends Drawable {
     }
 
     const startValues = Utils.createArrayWithRandomInt();
+    // this.rows = Utils.createMatrix(this.gridSize, () => new Cell());
 
     for (let i = 0; i < 4; i++) {
       const cells = [];
       for (let j = 0; j < 4; j++) {
         const currentIndex = i * 4 + j;
-
         if (startValues.includes(currentIndex)) {
           cells.push(new Cell(1));
         } else {
@@ -44,31 +45,27 @@ class App extends Drawable {
     window.addEventListener('resize', this.resizeCanvasHandler.bind(this));
     document.addEventListener('keydown', this.keyDownHandler.bind(this));
     this.resizeCanvasHandler();
-    // console.log(this.rows);
   }
 
   draw() {
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        this.rows[j][i].draw();
-      }
-    }
+    this.ctx.clearRect(0, 0, Drawable.board.width, Drawable.board.height);
+    Utils.forEach(this.rows, (i, j) => {
+      this.rows[i][j].draw();
+    });
   }
 
   resizeCanvasHandler() {
     Drawable.setCanvasSize(Math.min(document.documentElement.clientWidth, 500));
     this.gap = Drawable.board.width * 0.05;
 
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        const cell = this.rows[i][j];
-        const sizeCellGrid = (Drawable.board.width - this.gap) / 4;
-        cell.setPosition(
-          new Vector2(j * sizeCellGrid + this.gap, i * sizeCellGrid + this.gap),
-        );
-        cell.setSize(sizeCellGrid - this.gap);
-      }
-    }
+    Utils.forEach(this.rows, (i, j) => {
+      const cell = this.rows[i][j];
+      const sizeCellGrid = (Drawable.board.width - this.gap) / 4;
+      cell.setPosition(
+        new Vector2(j * sizeCellGrid + this.gap, i * sizeCellGrid + this.gap),
+      );
+      cell.setSize(sizeCellGrid - this.gap);
+    });
 
     this.draw();
   }
@@ -106,29 +103,18 @@ class App extends Drawable {
 
   move(direction) {
     const groups = this.getGroups(direction);
-    console.log(groups);
-    for (let i = 0; i < 4; i++) {
-      for (let j = 1; j < 4; j++) {
-        if (groups[i][j].value !== 0) {
-          let curent = j;
-          while (curent - 1 >= 0) {
-            if (groups[i][curent - 1].value === 0) {
-              groups[i][curent - 1].value = groups[i][curent].value;
-              groups[i][curent].value = 0;
-            } else if (
-              groups[i][curent].value === groups[i][curent - 1].value
-            ) {
-              groups[i][curent - 1].value += 1;
-              // this.score.innerText += groups[i][curent - 1].value;
-              groups[i][curent].value = 0;
-              break;
-            }
-            curent--;
+    Utils.forEach(groups, (i, j) => {
+      if (j === 0) return;
+      if (groups[i][j].value !== 0) {
+        for (let k = j; k - 1 >= 0; k--) {
+          if (groups[i][k - 1].setValueFrom(groups[i][k])) {
+            break;
           }
         }
       }
-    }
-    this.resizeCanvasHandler();
+    });
+
+    this.draw();
   }
 }
 

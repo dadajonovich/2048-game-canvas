@@ -19,6 +19,10 @@ class Cell extends Drawable {
 
   position = new Vector2(0, 0);
 
+  prevPosition;
+
+  nextPosition;
+
   size = 0;
 
   value = 0;
@@ -40,6 +44,21 @@ class Cell extends Drawable {
     this.value = value;
   }
 
+  setValueFrom(cell) {
+    if (this.value === 0) {
+      this.value = cell.value;
+      cell.value = 0;
+      cell.nextPosition = this.position;
+    } else if (cell.value === this.value) {
+      this.value += 1;
+      cell.value = 0;
+      cell.nextPosition = this.position;
+      return true;
+    }
+
+    return false;
+  }
+
   draw() {
     if (this.value === 0) return;
 
@@ -57,10 +76,10 @@ class Cell extends Drawable {
       this.size,
       this.size,
     );
-    Drawable.ctx.fillStyle = 'black';
-    Drawable.ctx.textAlign = 'center';
-    Drawable.ctx.textBaseline = 'middle';
-    Drawable.ctx.fillText(
+    this.ctx.fillStyle = 'black';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    this.ctx.fillText(
       2 ** this.value,
       this.position.x + this.size / 2,
       this.position.y + this.size / 2,

@@ -1,12 +1,17 @@
 class Drawable {
   /** @type {CanvasRenderingContext2D} */
-  static ctx;
 
   static board;
 
   static setCanvasSize(size) {
     Drawable.board.width = size;
     Drawable.board.height = size;
+  }
+
+  static ctx;
+
+  get ctx() {
+    return Drawable.ctx;
   }
 
   constructor() {
