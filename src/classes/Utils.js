@@ -17,15 +17,15 @@ class Utils {
   //     return randomArray;
   //   }
 
-  static createArrayWithRandomInt(min = 0, max = 15, length = 2) {
-    const randomArray = new Array(max - min + 1)
-      .fill()
-      .map((_i, i) => i + min)
-      .sort(() => Math.random() - 0.5)
-      .filter((_i, i) => i < length);
+  // static createArrayWithRandomInt(min = 0, max = 15, length = 2) {
+  //   const randomArray = new Array(max - min + 1)
+  //     .fill()
+  //     .map((_i, i) => i + min)
+  //     .sort(() => Math.random() - 0.5)
+  //     .filter((_i, i) => i < length);
 
-    return randomArray;
-  }
+  //   return randomArray;
+  // }
 
   // static rotate90Counterсlockwise(matrix) {
   //   return matrix[0].map((_, i) => matrix.map((subArray) => subArray[i]));

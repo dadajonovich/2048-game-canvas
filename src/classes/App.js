@@ -1,6 +1,5 @@
 import Cell from './Cell';
 import Drawable from './Drawable';
-// import Grid from './Grid';
 import Utils from './Utils';
 import Vector2 from './Vector2';
 
@@ -26,20 +25,10 @@ class App extends Drawable {
       throw new Error('Score missing!');
     }
 
-    const startValues = Utils.createArrayWithRandomInt();
-    // this.rows = Utils.createMatrix(this.gridSize, () => new Cell());
+    this.rows = Utils.createMatrix(this.gridSize, () => new Cell());
 
-    for (let i = 0; i < 4; i++) {
-      const cells = [];
-      for (let j = 0; j < 4; j++) {
-        const currentIndex = i * 4 + j;
-        if (startValues.includes(currentIndex)) {
-          cells.push(new Cell(1));
-        } else {
-          cells.push(new Cell(1));
-        }
-      }
-      this.rows.push(cells);
+    for (let i = 0; i < 2; i++) {
+      this.getAnyEmptyCell().setValue(1);
     }
 
     window.addEventListener('resize', this.resizeCanvasHandler.bind(this));
@@ -115,6 +104,22 @@ class App extends Drawable {
     });
 
     this.draw();
+  }
+
+  getAnyEmptyCell() {
+    const emptyCells = [];
+
+    Utils.forEach(this.rows, (i, j) => {
+      if (this.rows[i][j].value === 0) {
+        emptyCells.push(this.rows[i][j]);
+      }
+    });
+
+    if (emptyCells.length === 0) return undefined;
+
+    const randomIndex = Math.floor(Math.random() * emptyCells.length);
+
+    return emptyCells[randomIndex];
   }
 }
 

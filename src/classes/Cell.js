@@ -27,7 +27,7 @@ class Cell extends Drawable {
 
   value = 0;
 
-  constructor(value) {
+  constructor(value = 0) {
     super();
     this.value = value;
   }
