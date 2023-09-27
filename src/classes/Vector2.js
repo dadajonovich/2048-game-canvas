@@ -3,12 +3,8 @@ class Vector2 {
 
   y;
 
-  setX(value) {
-    this.x = value;
-  }
-
-  setY(value) {
-    this.y = value;
+  get length() {
+    return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
 
   constructor(x, y) {

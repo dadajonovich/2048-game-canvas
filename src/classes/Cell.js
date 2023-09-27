@@ -19,13 +19,17 @@ class Cell extends Drawable {
 
   position = new Vector2(0, 0);
 
-  animatedPosition = null;
+  animatedPosition;
+
+  animated = false;
 
   fixed = false;
 
   size = 0;
 
   value = 0;
+
+  speed = 0.1;
 
   constructor(value = 0) {
     super();
@@ -34,6 +38,7 @@ class Cell extends Drawable {
 
   setPosition(position) {
     this.position = position;
+    this.animatedPosition = position;
   }
 
   setSize(size) {
@@ -58,51 +63,63 @@ class Cell extends Drawable {
       this.setValue(cell.value);
       cell.setValue(0);
       this.animatedPosition = cell.position;
+      // cell.animatedPosition = this.position;
     }
     if (cell.value === this.value) {
-      const sumVal = cell.value + this.value;
+      const sumVal = 1 + this.value;
       this.setValue(sumVal);
       cell.setValue(0);
       this.fixed = true;
       this.animatedPosition = cell.position;
+      // cell.animatedPosition = this.position;
     }
+    // console.log('Position:', this.position);
+    // console.log('Animated position:', this.animatedPosition);
   }
 
-  draw() {
+  draw(i, j) {
     if (this.value === 0) return;
 
+    const position = this.animatedPosition;
+
     Drawable.ctx.fillStyle = Cell.colors[this.value];
-    Drawable.ctx.fillRect(
-      this.position.x,
-      this.position.y,
-      this.size,
-      this.size,
-    );
-    Drawable.ctx.strokeRect(
-      this.position.x,
-      this.position.y,
-      this.size,
-      this.size,
-    );
+    Drawable.ctx.fillRect(position.x, position.y, this.size, this.size);
+    Drawable.ctx.strokeRect(position.x, position.y, this.size, this.size);
     this.ctx.fillStyle = 'black';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
     this.ctx.fillText(
       2 ** this.value,
-      this.position.x + this.size / 2,
-      this.position.y + this.size / 2,
+      // `${this.fixed}`,
+      // `${this.value}/${this.animatedPosition.x}/${this.animatedPosition.y}`,
+      // `${i} / ${j}`,
+      position.x + this.size / 2,
+      position.y + this.size / 2,
     );
   }
 
   animatedMove(timestamp) {
-    if (this.animatedPosition === this.position || !this.animatedPosition)
-      return;
-    console.log(this.position, this.animatedPosition);
-    const dx = this.animatedPosition.x - this.position.x;
-    const dy = this.animatedPosition.y - this.position.y;
+    const offset = new Vector2(
+      // this.animatedPosition.x - this.position.x,
+      // this.animatedPosition.y - this.position.y,
+      this.position.x - this.animatedPosition.x,
+      this.position.y - this.animatedPosition.y,
+    );
 
-    this.position.setX(this.position.x + dx * this.position.vx);
-    this.position.setY(this.position.y + dy * this.position.vy);
+    if (offset.length < 1 || this.value === 0) {
+      this.animated = false;
+      this.animatedPosition = this.position;
+      // this.animatedPosition = null;
+      // console.log('finish!');
+      return;
+    }
+
+    this.animated = true;
+
+    this.animatedPosition = new Vector2(
+      this.animatedPosition.x + offset.x * this.speed,
+      this.animatedPosition.y + offset.y * this.speed,
+    );
   }
 }
 

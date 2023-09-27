@@ -15,6 +15,8 @@ class App extends Drawable {
 
   gap = 0;
 
+  animated = false;
+
   gridSize = 4;
 
   score = document.getElementById('score');
@@ -26,11 +28,15 @@ class App extends Drawable {
     }
 
     this.rows = Utils.createMatrix(this.gridSize, () => new Cell());
-    console.log(this.rows);
+    // console.log(this.rows);
 
     for (let i = 0; i < 2; i++) {
       this.getAnyEmptyCell().setValue(1);
     }
+
+    // this.rows[0][0].setValue(1);
+    // this.rows[0][1].setValue(1);
+    // this.rows[0][3].setValue(2);
 
     window.requestAnimationFrame(this.tick.bind(this));
 
@@ -41,8 +47,8 @@ class App extends Drawable {
 
   draw() {
     this.ctx.clearRect(0, 0, Drawable.board.width, Drawable.board.height);
-    Utils.forEach(this.rows, (cell) => {
-      cell.draw();
+    Utils.forEach(this.rows, (cell, i, j) => {
+      cell.draw(i, j);
     });
   }
 
@@ -98,21 +104,22 @@ class App extends Drawable {
       if (j === 0) return;
       if (current.value === 0) return;
 
-      for (let k = j - 1; k >= 0; k--) {
-        const observed = groups[i][k];
+      for (let k = j - 1; k >= -1; k--) {
+        const prevObserved = groups[i][k + 1];
 
         // Упёрся в стену
-        if (k === 0) {
+        if (k === -1) {
+          console.log('Wall');
           // Переходит к стене
-          observed.mergeWith(current);
+          prevObserved.mergeWith(current);
           break;
         }
 
+        const observed = groups[i][k];
         if (observed.value === 0) continue;
 
         // Упёрся в другую клетку
         if (observed.value !== current.value || observed.fixed) {
-          const prevObserved = groups[i][k + 1];
           prevObserved.mergeWith(current);
           break;
         }
@@ -121,8 +128,9 @@ class App extends Drawable {
       }
     });
     Utils.forEach(this.rows, (cell) => cell.unfix());
+
     this.getAnyEmptyCell().setValue(Math.random() < 0.1 ? 2 : 1);
-    this.draw();
+    // this.draw();
   }
 
   getAnyEmptyCell() {
@@ -143,9 +151,19 @@ class App extends Drawable {
 
   tick(timestamp) {
     // console.log(timestamp);
-    Utils.forEach(this.rows, (cell) => cell.animatedMove());
+    this.update();
     this.draw();
     window.requestAnimationFrame(this.tick.bind(this));
+  }
+
+  update() {
+    this.animated = false;
+    Utils.forEach(this.rows, (cell) => {
+      cell.animatedMove();
+      if (cell.animated) {
+        this.animated = true;
+      }
+    });
   }
 }
 
