@@ -19,11 +19,7 @@ class Cell extends Drawable {
 
   position = new Vector2(0, 0);
 
-  prevPosition = null;
-
-  nextPosition = null;
-
-  isAnimating = false;
+  animatedPosition = null;
 
   fixed = false;
 
@@ -48,20 +44,28 @@ class Cell extends Drawable {
     this.value = value;
   }
 
+  setFixed(bool) {
+    this.fixed = bool;
+  }
+
+  unfix() {
+    this.fixed = false;
+  }
+
   mergeWith(cell) {
-    if (this.value === 0) {
-      this.value = cell.value;
-      cell.value = 0;
-      // cell.nextPosition = this.position;
+    if (this === cell) return;
+    if (this.value === 0 && cell.value !== 0) {
+      this.setValue(cell.value);
+      cell.setValue(0);
+      this.animatedPosition = cell.position;
     }
     if (cell.value === this.value) {
-      this.value += 1;
-      cell.value = 0;
-      cell.nextPosition = this.position;
-      return true;
+      const sumVal = cell.value + this.value;
+      this.setValue(sumVal);
+      cell.setValue(0);
+      this.fixed = true;
+      this.animatedPosition = cell.position;
     }
-
-    return false;
   }
 
   draw() {
@@ -90,7 +94,16 @@ class Cell extends Drawable {
     );
   }
 
-  animated() {}
+  animatedMove(timestamp) {
+    if (this.animatedPosition === this.position || !this.animatedPosition)
+      return;
+    console.log(this.position, this.animatedPosition);
+    const dx = this.animatedPosition.x - this.position.x;
+    const dy = this.animatedPosition.y - this.position.y;
+
+    this.position.setX(this.position.x + dx * this.position.vx);
+    this.position.setY(this.position.y + dy * this.position.vy);
+  }
 }
 
 export default Cell;

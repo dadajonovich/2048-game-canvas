@@ -3,6 +3,14 @@ class Vector2 {
 
   y;
 
+  setX(value) {
+    this.x = value;
+  }
+
+  setY(value) {
+    this.y = value;
+  }
+
   constructor(x, y) {
     this.x = x;
     this.y = y;

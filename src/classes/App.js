@@ -26,6 +26,7 @@ class App extends Drawable {
     }
 
     this.rows = Utils.createMatrix(this.gridSize, () => new Cell());
+    console.log(this.rows);
 
     for (let i = 0; i < 2; i++) {
       this.getAnyEmptyCell().setValue(1);
@@ -93,18 +94,33 @@ class App extends Drawable {
 
   move(direction) {
     const groups = this.getGroups(direction);
-    Utils.forEach(groups, (cell, i, j) => {
+    Utils.forEach(groups, (current, i, j) => {
       if (j === 0) return;
-      if (groups[i][j].value === 0) return;
-      for (let k = j; k - 1 >= 0; k--) {
-        const currentCell = groups[i][k];
-        const prevCell = groups[i][k - 1];
-        if (prevCell.mergeWith(currentCell)) {
+      if (current.value === 0) return;
+
+      for (let k = j - 1; k >= 0; k--) {
+        const observed = groups[i][k];
+
+        // Упёрся в стену
+        if (k === 0) {
+          // Переходит к стене
+          observed.mergeWith(current);
           break;
         }
+
+        if (observed.value === 0) continue;
+
+        // Упёрся в другую клетку
+        if (observed.value !== current.value || observed.fixed) {
+          const prevObserved = groups[i][k + 1];
+          prevObserved.mergeWith(current);
+          break;
+        }
+        observed.mergeWith(current);
+        break;
       }
     });
-
+    Utils.forEach(this.rows, (cell) => cell.unfix());
     this.getAnyEmptyCell().setValue(Math.random() < 0.1 ? 2 : 1);
     this.draw();
   }
@@ -126,7 +142,9 @@ class App extends Drawable {
   }
 
   tick(timestamp) {
-    console.log(timestamp);
+    // console.log(timestamp);
+    Utils.forEach(this.rows, (cell) => cell.animatedMove());
+    this.draw();
     window.requestAnimationFrame(this.tick.bind(this));
   }
 }
