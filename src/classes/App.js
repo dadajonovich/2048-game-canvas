@@ -104,18 +104,18 @@ class App extends Drawable {
       if (j === 0) return;
       if (current.value === 0) return;
 
-      for (let k = j - 1; k >= -1; k--) {
-        const prevObserved = groups[i][k + 1];
+      for (let k = j; k >= 0; k--) {
+        const prevObserved = groups[i][k];
 
         // Упёрся в стену
-        if (k === -1) {
+        if (k === 0) {
           console.log('Wall');
           // Переходит к стене
           prevObserved.mergeWith(current);
           break;
         }
 
-        const observed = groups[i][k];
+        const observed = groups[i][k - 1];
         if (observed.value === 0) continue;
 
         // Упёрся в другую клетку
