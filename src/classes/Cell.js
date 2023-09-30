@@ -29,7 +29,7 @@ class Cell extends Drawable {
 
   value = 0;
 
-  speed = 0.1;
+  speed = 0.25;
 
   constructor(value = 0) {
     super();
@@ -57,22 +57,28 @@ class Cell extends Drawable {
     this.fixed = false;
   }
 
-  mergeWith(cell) {
-    if (this === cell) return;
+  mergeWith(cell, isTesting = false) {
+    let mergeValue = 0;
+    if (this === cell) return mergeValue;
     if (this.value === 0 && cell.value !== 0) {
       this.setValue(cell.value);
       cell.setValue(0);
-      this.animatedPosition = cell.position;
-      // cell.animatedPosition = this.position;
+      if (!isTesting) {
+        this.animatedPosition = cell.position;
+      }
+      mergeValue = 0;
     }
     if (cell.value === this.value) {
-      const sumVal = 1 + this.value;
+      const sumVal = cell.value + this.value;
       this.setValue(sumVal);
       cell.setValue(0);
       this.fixed = true;
-      this.animatedPosition = cell.position;
-      // cell.animatedPosition = this.position;
+      if (!isTesting) {
+        this.animatedPosition = cell.position;
+      }
+      mergeValue = sumVal;
     }
+    return mergeValue;
     // console.log('Position:', this.position);
     // console.log('Animated position:', this.animatedPosition);
   }
@@ -82,23 +88,27 @@ class Cell extends Drawable {
 
     const position = this.animatedPosition;
 
-    Drawable.ctx.fillStyle = Cell.colors[this.value];
-    Drawable.ctx.fillRect(position.x, position.y, this.size, this.size);
-    Drawable.ctx.strokeRect(position.x, position.y, this.size, this.size);
+    this.ctx.lineWidth = 1;
+    this.ctx.fillStyle =
+      Cell.colors[this.value === 0 ? 0 : Math.round(Math.log2(this.value))];
+    this.ctx.fillRect(position.x, position.y, this.size, this.size);
+    this.ctx.strokeRect(position.x, position.y, this.size, this.size);
     this.ctx.fillStyle = 'black';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
+    this.ctx.font = '42px sans-serif';
     this.ctx.fillText(
-      2 ** this.value,
+      this.value,
       // `${this.fixed}`,
       // `${this.value}/${this.animatedPosition.x}/${this.animatedPosition.y}`,
+      // `${this.value}/${this.value}`,
       // `${i} / ${j}`,
       position.x + this.size / 2,
       position.y + this.size / 2,
     );
   }
 
-  animatedMove(timestamp) {
+  animatedMove() {
     const offset = new Vector2(
       // this.animatedPosition.x - this.position.x,
       // this.animatedPosition.y - this.position.y,

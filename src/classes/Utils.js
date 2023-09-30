@@ -68,11 +68,15 @@ class Utils {
   }
 
   static createMatrix(size, createItem) {
-    return Utils.createArray(size, (rowIndex) =>
-      Utils.createArray(size, (columnIndex) => {
+    return Utils.createArray(size.y, (rowIndex) =>
+      Utils.createArray(size.x, (columnIndex) => {
         return createItem(rowIndex, columnIndex);
       }),
     );
+  }
+
+  static saveOnLocalStorage(nameField, obj) {
+    localStorage.setItem(nameField, JSON.stringify(obj));
   }
 }
 

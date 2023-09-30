@@ -7,9 +7,22 @@
   </head>
   <body>
     <main class="wrapper">
-      <div class="counter">
-        <p class="counter__title">Счет: <span id="score">666</span></p>
-      </div>
+      <article class="counter">
+        <p class="counter__title">
+          Счет: <span class="counter__score">666</span>
+        </p>
+      </article>
+      <article class="options">
+        <label class="options__label">
+          Ширина:
+          <input id="width" type="number" min="2" max="10" value="2" />
+        </label>
+        <label class="options__label">
+          Высота:
+          <input id="height" type="number" min="2" max="10" value="2" />
+        </label>
+        <button id="sumbit">Применить!</button>
+      </article>
       <canvas id="board" class="board"> </canvas>
     </main>
     <script type="module" src="main.js"></script>
