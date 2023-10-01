@@ -21,7 +21,7 @@ class Cell extends Drawable {
 
   animatedPosition;
 
-  animated = false;
+  isAnimated = false;
 
   fixed = false;
 
@@ -29,7 +29,7 @@ class Cell extends Drawable {
 
   value = 0;
 
-  speed = 0.25;
+  speed = 0.1;
 
   constructor(value = 0) {
     super();
@@ -83,20 +83,24 @@ class Cell extends Drawable {
     // console.log('Animated position:', this.animatedPosition);
   }
 
-  draw(i, j) {
+  draw() {
     if (this.value === 0) return;
 
     const position = this.animatedPosition;
+    const size = new Vector2(this.size, this.size);
+    const borderRadius = this.size / 7;
 
     this.ctx.lineWidth = 1;
     this.ctx.fillStyle =
       Cell.colors[this.value === 0 ? 0 : Math.round(Math.log2(this.value))];
-    this.ctx.fillRect(position.x, position.y, this.size, this.size);
-    this.ctx.strokeRect(position.x, position.y, this.size, this.size);
+    this.drawRoundedRect(position, size, borderRadius);
+    // this.ctx.fillRect(position.x, position.y, this.size, this.size);
+    // this.ctx.strokeStyle = 'transparent';
+    // this.ctx.strokeRect(position.x, position.y, this.size, this.size);
     this.ctx.fillStyle = 'black';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
-    this.ctx.font = '42px sans-serif';
+    this.ctx.font = `${0.8 * this.size}px sans-serif`;
     this.ctx.fillText(
       this.value,
       // `${this.fixed}`,
@@ -117,14 +121,14 @@ class Cell extends Drawable {
     );
 
     if (offset.length < 1 || this.value === 0) {
-      this.animated = false;
+      this.isAnimated = false;
       this.animatedPosition = this.position;
       // this.animatedPosition = null;
       // console.log('finish!');
       return;
     }
 
-    this.animated = true;
+    this.isAnimated = true;
 
     this.animatedPosition = new Vector2(
       this.animatedPosition.x + offset.x * this.speed,

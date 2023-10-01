@@ -11,7 +11,7 @@ class App extends Drawable {
 
   shouldAddCell = false;
 
-  animated = false;
+  isAnimated = false;
 
   gridSize;
 
@@ -44,7 +44,8 @@ class App extends Drawable {
 
     this.updateGridSize();
 
-    this.sizeSubmit.addEventListener('click', () => {
+    this.sizeSubmit.addEventListener('click', (e) => {
+      e.preventDefault();
       this.updateGridSize();
       this.restart();
     });
@@ -70,24 +71,33 @@ class App extends Drawable {
   }
 
   draw() {
+    const position = new Vector2(0, 0);
+    const size = new Vector2(Drawable.board.width, Drawable.board.height);
+    const borderRadius = this.size / 7;
+
     this.ctx.fillStyle = '#cfc0af';
+    // this.drawRoundedRect(position, size, borderRadius);
     this.ctx.fillRect(0, 0, Drawable.board.width, Drawable.board.height);
     this.ctx.lineWidth = 15;
+    this.ctx.strokeStyle = '#9e9e9e';
     this.ctx.strokeRect(0, 0, Drawable.board.width, Drawable.board.height);
 
-    Utils.forEach(this.rows, (cell, i, j) => {
-      cell.draw(i, j);
+    Utils.forEach(this.rows, (cell) => {
+      cell.draw();
     });
   }
 
   resizeCanvasHandler() {
-    Drawable.setCanvasSize(Math.min(document.documentElement.clientWidth, 500));
-    this.gap = Drawable.board.width * 0.05;
+    Drawable.setCanvasSize(this.gridSize.x, this.gridSize.y);
+    this.gap = Math.min(
+      Drawable.board.width * 0.05,
+      Drawable.board.height * 0.05,
+    );
 
     Utils.forEach(this.rows, (cell, i, j) => {
       const sizeCellGrid =
-        (Drawable.board.width - this.gap) /
-        Math.max(this.gridSize.x, this.gridSize.y);
+        (Math.min(Drawable.board.width, Drawable.board.height) - this.gap) /
+        Math.min(this.gridSize.x, this.gridSize.y);
       cell.setPosition(
         new Vector2(j * sizeCellGrid + this.gap, i * sizeCellGrid + this.gap),
       );
@@ -129,39 +139,38 @@ class App extends Drawable {
   }
 
   move(direction) {
-    console.log(direction);
-    if (this.animated) return false;
+    // console.log(direction);
+    if (this.isAnimated) return false;
     const groups = this.getGroups(direction);
     let isChanged = false;
     Utils.forEach(groups, (current, i, j) => {
       if (j === 0) return;
       if (current.value === 0) return;
-      console.log(current.value);
+      // console.log(current.value);
       for (let k = j; k >= 0; k--) {
         const prevObserved = groups[i][k];
 
-        // Упёрся в стену
         if (k === 0) {
-          console.log('Wall');
+          // console.log('Wall');
           prevObserved.mergeWith(current, this.isTesting);
           break;
         }
 
         const observed = groups[i][k - 1];
         if (observed.value === 0) {
-          console.log('Observed === 0');
+          // console.log('Observed === 0');
           isChanged = true;
           continue;
         }
 
         if (observed.value !== current.value || observed.fixed) {
-          console.log('observed.value !== current.value || observed.fixed');
+          // console.log('observed.value !== current.value || observed.fixed');
           prevObserved.mergeWith(current, this.isTesting);
           break;
         }
         const mergeValue = observed.mergeWith(current, this.isTesting);
         if (!this.isTesting) this.score += mergeValue;
-        console.log('Merged!');
+        // console.log('Merged!');
         isChanged = true;
         break;
       }
@@ -175,7 +184,7 @@ class App extends Drawable {
   getAnyEmptyCell() {
     const emptyCells = [];
 
-    Utils.forEach(this.rows, (cell, i, j) => {
+    Utils.forEach(this.rows, (cell) => {
       if (cell.value === 0) {
         emptyCells.push(cell);
       }
@@ -188,7 +197,7 @@ class App extends Drawable {
     return emptyCells[randomIndex];
   }
 
-  tick(timestamp) {
+  tick() {
     // console.log(timestamp);
     this.update();
     this.draw();
@@ -197,16 +206,16 @@ class App extends Drawable {
 
   update() {
     this.scoreElement.textContent = this.score;
-    this.animated = false;
+    this.isAnimated = false;
 
     Utils.forEach(this.rows, (cell) => {
       cell.animatedMove();
-      if (cell.animated) {
-        this.animated = true;
+      if (cell.isAnimated) {
+        this.isAnimated = true;
       }
     });
 
-    if (this.shouldAddCell && !this.animated) {
+    if (this.shouldAddCell && !this.isAnimated) {
       this.shouldAddCell = false;
       this.getAnyEmptyCell().setValue(Math.random() < 0.1 ? 4 : 2);
 
@@ -280,9 +289,9 @@ class App extends Drawable {
       !Object.values(Direction).find((direction) => this.canMove(direction))
     ) {
       setTimeout(() => {
-        alert('Game Over!');
+        alert('Нельзя сделать ход');
         this.restart();
-      }, 100);
+      }, 500);
     }
   }
 }

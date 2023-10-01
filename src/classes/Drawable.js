@@ -3,9 +3,22 @@ class Drawable {
 
   static board;
 
-  static setCanvasSize(size) {
-    Drawable.board.width = size;
-    Drawable.board.height = size;
+  static setCanvasSize(width, height, max = 500) {
+    const ratio = width / height;
+
+    if (width >= height) {
+      Drawable.board.width = Math.min(
+        document.documentElement.clientWidth,
+        max,
+      );
+      Drawable.board.height = Drawable.board.width / ratio;
+    } else {
+      Drawable.board.height = Math.min(
+        document.documentElement.clientWidth,
+        max,
+      );
+      Drawable.board.width = Drawable.board.height * ratio;
+    }
   }
 
   static ctx;
@@ -26,6 +39,22 @@ class Drawable {
 
   draw() {
     throw new Error('The draw method is not implemented');
+  }
+
+  drawRoundedRect(position, size, radius) {
+    radius = Math.max(radius, 0);
+    const { x: left, y: top } = position;
+    const { x: width, y: height } = size;
+    const right = left + width;
+    const bottom = top + height;
+    this.ctx.beginPath();
+    this.ctx.moveTo(left, top + radius);
+    this.ctx.arcTo(left, bottom, left + radius, bottom, radius);
+    this.ctx.arcTo(right, bottom, right, bottom - radius, radius);
+    this.ctx.arcTo(right, top, right - radius, top, radius);
+    this.ctx.arcTo(left, top, left, top + radius, radius);
+    this.ctx.fill();
+    // ctx.stroke();
   }
 }
 
