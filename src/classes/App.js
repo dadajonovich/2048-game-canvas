@@ -27,8 +27,18 @@ class App extends Drawable {
 
   isTesting = false;
 
+  startPosition;
+
+  endPosition;
+
+  isGameOver = false;
+
   constructor() {
     super();
+
+    document.documentElement.style.touchAction = 'none';
+    document.documentElement.style.userSelect = 'none';
+    document.documentElement.setAttribute('ondragstart', 'return false;');
 
     this.heightElement = document.getElementById('height');
     this.widthElement = document.getElementById('width');
@@ -44,12 +54,6 @@ class App extends Drawable {
 
     this.updateGridSize();
 
-    this.sizeSubmit.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.updateGridSize();
-      this.restart();
-    });
-
     this.scoreElement = document.querySelector('.counter__score');
     if (!this.scoreElement) {
       throw new Error('Score missing!');
@@ -57,30 +61,26 @@ class App extends Drawable {
 
     this.loadFromLocalStorage();
 
-    // this.rows[0][0].setValue(2);
-    // this.setValues([
-    //   [32, 4],
-    //   [8, 4],
-    // ]);
-
     window.requestAnimationFrame(this.tick.bind(this));
 
+    this.sizeSubmit.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.updateGridSize();
+      this.restart();
+    });
     window.addEventListener('resize', this.resizeCanvasHandler.bind(this));
     document.addEventListener('keydown', this.keyDownHandler.bind(this));
+    document.body.addEventListener(
+      'pointerdown',
+      this.mouseDownHandler.bind(this),
+    );
+    document.body.addEventListener('pointerup', this.mouseUpHandler.bind(this));
+
     this.resizeCanvasHandler();
   }
 
   draw() {
-    const position = new Vector2(0, 0);
-    const size = new Vector2(Drawable.board.width, Drawable.board.height);
-    const borderRadius = this.size / 7;
-
-    this.ctx.fillStyle = '#cfc0af';
-    // this.drawRoundedRect(position, size, borderRadius);
-    this.ctx.fillRect(0, 0, Drawable.board.width, Drawable.board.height);
-    this.ctx.lineWidth = 15;
-    this.ctx.strokeStyle = '#9e9e9e';
-    this.ctx.strokeRect(0, 0, Drawable.board.width, Drawable.board.height);
+    this.ctx.clearRect(0, 0, Drawable.board.width, Drawable.board.height);
 
     Utils.forEach(this.rows, (cell) => {
       cell.draw();
@@ -123,54 +123,87 @@ class App extends Drawable {
   keyDownHandler(event) {
     switch (event.key) {
       case 'ArrowUp':
-        // console.log('Click ArrowUp!');
-        return this.move(Direction.up);
+        this.move(Direction.up);
+        break;
       case 'ArrowLeft':
-        return this.move(Direction.left);
+        this.move(Direction.left);
+        break;
       case 'ArrowDown':
-        // console.log('Click ArrowDown!');
-        return this.move(Direction.down);
+        this.move(Direction.down);
+        break;
       case 'ArrowRight':
-        // console.log('Click ArrowRight');
-        return this.move(Direction.right);
+        this.move(Direction.right);
+        break;
       default:
-        return undefined;
+        break;
     }
   }
 
+  mouseUpHandler(event) {
+    this.endPosition = new Vector2(event.clientX, event.clientY);
+    const directionMouseMove = this.calcMouseMove();
+    if (!directionMouseMove) return;
+    this.move(directionMouseMove);
+  }
+
+  mouseDownHandler(event) {
+    this.startPosition = new Vector2(event.clientX, event.clientY);
+  }
+
+  calcMouseMove() {
+    let direction;
+    const offset = new Vector2(
+      Math.abs(this.startPosition.x - this.endPosition.x),
+      Math.abs(this.startPosition.y - this.endPosition.y),
+    );
+
+    if (offset.length < 1) return null;
+    if (offset.x > offset.y) {
+      direction =
+        this.startPosition.x > this.endPosition.x
+          ? Direction.left
+          : Direction.right;
+    } else {
+      direction =
+        this.startPosition.y > this.endPosition.y
+          ? Direction.up
+          : Direction.down;
+    }
+    return direction;
+  }
+
   move(direction) {
-    // console.log(direction);
     if (this.isAnimated) return false;
     const groups = this.getGroups(direction);
     let isChanged = false;
     Utils.forEach(groups, (current, i, j) => {
       if (j === 0) return;
       if (current.value === 0) return;
-      // console.log(current.value);
       for (let k = j; k >= 0; k--) {
         const prevObserved = groups[i][k];
 
         if (k === 0) {
-          // console.log('Wall');
           prevObserved.mergeWith(current, this.isTesting);
           break;
         }
 
         const observed = groups[i][k - 1];
         if (observed.value === 0) {
-          // console.log('Observed === 0');
           isChanged = true;
           continue;
         }
 
         if (observed.value !== current.value || observed.fixed) {
-          // console.log('observed.value !== current.value || observed.fixed');
           prevObserved.mergeWith(current, this.isTesting);
           break;
         }
         const mergeValue = observed.mergeWith(current, this.isTesting);
-        if (!this.isTesting) this.score += mergeValue;
-        // console.log('Merged!');
+        if (!this.isTesting) {
+          this.score += mergeValue;
+          if (mergeValue === 2048) {
+            this.isGameOver = true;
+          }
+        }
         isChanged = true;
         break;
       }
@@ -198,7 +231,6 @@ class App extends Drawable {
   }
 
   tick() {
-    // console.log(timestamp);
     this.update();
     this.draw();
     window.requestAnimationFrame(this.tick.bind(this));
@@ -217,6 +249,12 @@ class App extends Drawable {
 
     if (this.shouldAddCell && !this.isAnimated) {
       this.shouldAddCell = false;
+      if (this.isGameOver) {
+        alert('Уровень пройден');
+        this.restart();
+        return;
+      }
+
       this.getAnyEmptyCell().setValue(Math.random() < 0.1 ? 4 : 2);
 
       const values = this.getValues();
@@ -234,6 +272,7 @@ class App extends Drawable {
     for (let i = 0; i < 2; i++) {
       this.getAnyEmptyCell().setValue(2);
     }
+    this.isGameOver = false;
     this.resizeCanvasHandler();
   }
 
@@ -244,7 +283,6 @@ class App extends Drawable {
       this.rows = Utils.createMatrix(this.gridSize, () => new Cell());
       const itemFromLocalStorage = JSON.parse(prevValues);
       this.score = Number(localStorage.getItem('score'));
-      // console.log(itemFromLocalStorage);
       this.setValues(itemFromLocalStorage);
     } else {
       this.restart();

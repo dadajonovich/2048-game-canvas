@@ -54,7 +54,6 @@ class Drawable {
     this.ctx.arcTo(right, top, right - radius, top, radius);
     this.ctx.arcTo(left, top, left, top + radius, radius);
     this.ctx.fill();
-    // ctx.stroke();
   }
 }
 

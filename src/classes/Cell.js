@@ -79,8 +79,6 @@ class Cell extends Drawable {
       mergeValue = sumVal;
     }
     return mergeValue;
-    // console.log('Position:', this.position);
-    // console.log('Animated position:', this.animatedPosition);
   }
 
   draw() {
@@ -88,25 +86,17 @@ class Cell extends Drawable {
 
     const position = this.animatedPosition;
     const size = new Vector2(this.size, this.size);
-    const borderRadius = this.size / 7;
-
+    const borderRadius = 10;
     this.ctx.lineWidth = 1;
     this.ctx.fillStyle =
       Cell.colors[this.value === 0 ? 0 : Math.round(Math.log2(this.value))];
     this.drawRoundedRect(position, size, borderRadius);
-    // this.ctx.fillRect(position.x, position.y, this.size, this.size);
-    // this.ctx.strokeStyle = 'transparent';
-    // this.ctx.strokeRect(position.x, position.y, this.size, this.size);
     this.ctx.fillStyle = 'black';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
-    this.ctx.font = `${0.8 * this.size}px sans-serif`;
+    this.ctx.font = `${0.4 * this.size}px sans-serif`;
     this.ctx.fillText(
       this.value,
-      // `${this.fixed}`,
-      // `${this.value}/${this.animatedPosition.x}/${this.animatedPosition.y}`,
-      // `${this.value}/${this.value}`,
-      // `${i} / ${j}`,
       position.x + this.size / 2,
       position.y + this.size / 2,
     );
@@ -114,8 +104,6 @@ class Cell extends Drawable {
 
   animatedMove() {
     const offset = new Vector2(
-      // this.animatedPosition.x - this.position.x,
-      // this.animatedPosition.y - this.position.y,
       this.position.x - this.animatedPosition.x,
       this.position.y - this.animatedPosition.y,
     );
@@ -123,8 +111,6 @@ class Cell extends Drawable {
     if (offset.length < 1 || this.value === 0) {
       this.isAnimated = false;
       this.animatedPosition = this.position;
-      // this.animatedPosition = null;
-      // console.log('finish!');
       return;
     }
 
