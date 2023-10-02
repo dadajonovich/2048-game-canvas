@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2048</title>
+    <script type="module" crossorigin src="./assets/index-7e6965a6.js"></script>
+    <link rel="stylesheet" href="./assets/index-7dfb257d.css" />
+  </head>
+  <body>
+    <main class="wrapper">
+      <article class="counter">
+        <p class="counter__title">
+          Счёт: <span class="counter__score">666</span>
+        </p>
+      </article>
+      <article class="options">
+        <label class="options__label">
+          <span class="options__text">Ширина:</span>
+          <input id="width" type="number" min="2" max="10" value="4" />
+        </label>
+        <label class="options__label">
+          <span class="options__text">Высота:</span>
+          <input id="height" type="number" min="2" max="10" value="4" />
+        </label>
+        <button id="sumbit">Применить</button>
+      </article>
+      <canvas id="board" class="board"> </canvas>
+    </main>
+  </body>
+</html>

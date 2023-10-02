@@ -1,25 +1,64 @@
 .options {
-  display: flex;align-items: center;justify-content: space-between;// display: none;
+  display: flex;
 
-  margin: 14px;gap: 20px;
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin: 14px;
+
+  gap: 20px;
+
   &__label {
-    display: flex;align-items: center;font-size: 24px;gap: 5px;
-    }
+    display: flex;
+
+    align-items: center;
+
+    font-size: 24px;
+
+    gap: 5px;
+  }
+
+  @media only screen and (max-width: 640px) {
+    display: none;
+  }
 }
 
 #width,
 #height {
-  width: 50px;text-align: center;border: 3px solid $main-color;border-radius: 10px;font-size: 24px;
+  width: 50px;
 
-  }
+  text-align: center;
+
+  border: 3px solid $main-color;
+
+  border-radius: 10px;
+
+  font-size: 24px;
+}
 
 #sumbit {
-  display: inline-block;min-width: 100px;padding: 10px 15px;text-align: center;border: 3px solid $main-color;border-radius: 10px;background-color: $second-color;font-size: 16px;
+  display: inline-block;
+
+  min-width: 100px;
+
+  padding: 10px 15px;
+
+  text-align: center;
+
+  border: 3px solid $main-color;
+
+  border-radius: 10px;
+
+  background-color: $second-color;
+
+  font-size: 16px;
 
   &:hover {
-    cursor: pointer;opacity: 80%;
+    cursor: pointer;
 
-    }
+    opacity: 80%;
+  }
   &:active {
     transform: translateY(1px);
   }
