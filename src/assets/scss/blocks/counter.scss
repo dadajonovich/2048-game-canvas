@@ -1,19 +1,22 @@
 .counter {
+  transform: rotate(-9deg);
+
   width: 250px;
   height: 64px;
   margin-top: 60px;
+
   font-size: 32px;
-  transform: rotate(-9deg);
   
 
   &__title {
-    text-align: center;
-    text-transform: uppercase;
     font-family: monospace;
     color: #232d3f;
+    text-align: center;
+    text-transform: uppercase;
+
     background-color: #F4CE14;
     border-radius: 50px;
-    box-shadow: 4px 4px 10px rgba(26, 26, 26, 0.941);
+    box-shadow: 4px 4px 10px rgb(26 26 26 / 94.1%);
   }
 
   img {

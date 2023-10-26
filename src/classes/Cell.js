@@ -86,7 +86,7 @@ class Cell extends Drawable {
 
     const position = this.animatedPosition;
     const size = new Vector2(this.size, this.size);
-    const borderRadius = 30;
+    const borderRadius = 10;
     this.ctx.lineWidth = 1;
     this.ctx.fillStyle =
       Cell.colors[this.value === 0 ? 0 : Math.round(Math.log2(this.value))];
