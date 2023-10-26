@@ -1,14 +1,10 @@
 .board {
   max-width: 80%;
-
-  // border: 1px solid;
-
-  border-radius: 12px;
-
-  // background-color: magenta;
+  max-height: 80%;
+  margin: 10px;
   border-radius: 50px;
-  background: #e0e0e0;
+  background: #232d3f;
   box-shadow:
-    inset 20px 20px 60px #bebebe,
-    inset -20px -20px 60px #ffffff;
+    inset 20px 20px 60px #1e2636,
+    inset -20px -20px 60px #283448;
 }
