@@ -1,9 +1,14 @@
 .board {
   max-width: 80%;
 
-  border: 5px solid;
+  // border: 1px solid;
 
   border-radius: 12px;
 
-  background-color: $third-color;
+  // background-color: magenta;
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow:
+    inset 20px 20px 60px #bebebe,
+    inset -20px -20px 60px #ffffff;
 }
