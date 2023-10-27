@@ -1,3 +1,4 @@
+@import '../fonts/fonts';
 @import './abstracts/variables';
 @import './blocks/board';
 @import './blocks/counter';
@@ -11,9 +12,9 @@
   padding: 0;
 }
 
-html {
-  font-family: sans-serif;
-  color: #EAEAEA;
+body {
+  font-family: 'LomoWebPixel LT Std 4', monospace;
+  color: #eaeaea;
 }
 
 a {
@@ -22,8 +23,15 @@ a {
 }
 
 button {
+  font-family: inherit;
   border: none;
   outline: none;
+}
+
+select,
+input,
+textarea {
+  font-family: inherit;
 }
 
 ol,

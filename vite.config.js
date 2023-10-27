@@ -7,4 +7,10 @@ export default defineConfig({
   build: {
     outDir: path.join(__dirname, 'docs'),
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      // src: '/src',
+    },
+  },
 });

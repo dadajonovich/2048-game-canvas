@@ -94,11 +94,11 @@ class Cell extends Drawable {
     this.ctx.fillStyle = 'black';
     this.ctx.textAlign = 'center';
     this.ctx.textBaseline = 'middle';
-    this.ctx.font = `${0.4 * this.size}px sans-serif`;
+    this.ctx.font = `${0.4 * this.size}px 'LomoWebPixel LT Std 4'`;
     this.ctx.fillText(
       this.value,
       position.x + this.size / 2,
-      position.y + this.size / 2,
+      position.y + this.size / 2.5,
     );
   }
 

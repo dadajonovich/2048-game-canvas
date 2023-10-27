@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'LomoWebPixel LT Std 4';
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  src: url('@/assets/fonts/LomoWebPixelLTStd-4.eot');
+  src:
+    local('LomoWebPixel LT Std 4'),
+    local('LomoWebPixelLTStd-4'),
+    url('@/assets/fonts/LomoWebPixelLTStd-4.eot?#iefix')
+      format('embedded-opentype'),
+    url('@/assets/fonts/LomoWebPixelLTStd-4.woff2') format('woff2'),
+    url('@/assets/fonts/LomoWebPixelLTStd-4.woff') format('woff'),
+    url('@/assets/fonts/LomoWebPixelLTStd-4.ttf') format('truetype');
+}
