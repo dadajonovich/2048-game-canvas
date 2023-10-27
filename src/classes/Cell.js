@@ -29,7 +29,7 @@ class Cell extends Drawable {
 
   value = 0;
 
-  speed = 0.1;
+  speed = 0.15;
 
   constructor(value = 0) {
     super();
@@ -98,7 +98,7 @@ class Cell extends Drawable {
     this.ctx.fillText(
       this.value,
       position.x + this.size / 2,
-      position.y + this.size / 2.5,
+      position.y + this.size / 2,
     );
   }
 
